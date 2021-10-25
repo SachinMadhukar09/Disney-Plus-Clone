@@ -13,7 +13,6 @@ function Viewers() {
       <Wrap>
         <img src="/images/viewers-marvel.png" />
       </Wrap>
-
       <Wrap>
         <img src="/images/viewers-starwars.png" />
       </Wrap>
@@ -30,7 +29,7 @@ export default Viewers;
 const Container = styled.div`
   margin-top: 30px;
   display: grid;
-  padding: 30px 0px 26px;
+  padding: 30px 30px 26px;
   grid-gap: 25px;
   grid-template-columns: repeat(5, minmax(0, 1fr));
 `;
