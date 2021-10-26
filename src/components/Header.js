@@ -1,37 +1,62 @@
 import React from "react";
 import styled from "styled-components";
+import {auth , provider} from "../firebase"
+import { selectUserName, selectUserPhoto , setUserLogin } from "../features/user/userSlice";
+import {useDispatch, useSelector } from "react-redux";
 
 function Header() {
+  const dispatch = useDispatch()
+  const userName = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
+  const signIn= () => {
+    auth.signInWithPopup(provider)
+    .then((result)=>{
+       let user = result.user
+       dispatch(setUserLogin({
+           name:user.displayName,
+           email:user.email,
+           photo:user.photoURL,
+       }))
+    })
+  }
   return (
     <Nav>
       <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" />
-          <span>HOME</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" />
-          <span>SEARCH</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" />
-          <span>WATCHLIST</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" />
-          <span>ORIGINALS</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" />
-          <span>MOVIES</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <UserImg src="/images/Sachin Madhukar.jpeg" />
+      {!userName ? (
+        <LoginContainer>
+          <Login onClick={signIn}>Login</Login>
+        </LoginContainer>
+      ) : (
+        <>
+          <NavMenu>
+            <a>
+              <img src="/images/home-icon.svg" />
+              <span>HOME</span>
+            </a>
+            <a>
+              <img src="/images/search-icon.svg" />
+              <span>SEARCH</span>
+            </a>
+            <a>
+              <img src="/images/watchlist-icon.svg" />
+              <span>WATCHLIST</span>
+            </a>
+            <a>
+              <img src="/images/original-icon.svg" />
+              <span>ORIGINALS</span>
+            </a>
+            <a>
+              <img src="/images/movie-icon.svg" />
+              <span>MOVIES</span>
+            </a>
+            <a>
+              <img src="/images/series-icon.svg" />
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+          <UserImg src="/images/Sachin Madhukar.jpeg" />
+        </>
+      )}
     </Nav>
   );
 }
@@ -44,7 +69,7 @@ const Nav = styled.div`
   display: flex;
   align-items: center;
   padding: 0 36px;
-  overflow-x:hidden;
+  overflow-x: hidden;
 `;
 
 const Logo = styled.img`
@@ -67,27 +92,27 @@ const NavMenu = styled.div`
     span {
       font-size: 13px;
       letter-spacing: 1.42px;
-      position:relative;
+      position: relative;
 
       &:after {
-          content:"";
-          height:2px;
-          background:white;
-          position:absolute;
-          left:0;
-          right:0;
-          bottom:-6px;
-          opacity:0;
-          transform-origin:left center;
-          transition:all 250ms cubic-bezier(0.25,0.46,0.45,0.94) 0s;
-          transform:scale(0)
+        content: "";
+        height: 2px;
+        background: white;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -6px;
+        opacity: 0;
+        transform-origin: left center;
+        transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+        transform: scale(0);
       }
     }
     &:hover {
-        span:after{
-            transform:scale(1);
-            opacity:1;
-        }
+      span:after {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
   }
 `;
@@ -97,4 +122,25 @@ const UserImg = styled.img`
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
+`;
+
+const Login = styled.div`
+  border:1px solid #f9f9f9;
+  padding:8px 16px;
+  border-radius:4px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background-color: rgba(0,0,0,0.6)
+  transition:all 0.2s ease 0s;
+  cursor:pointer;
+  &:hover {
+      background-color: #f9f9f9;
+      color:#000;
+      border-color: transparent;
+  }
+`;
+const LoginContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 `;
